@@ -6,9 +6,8 @@ return [
     'allowed_origins' => [
         'http://localhost:5173',
         'http://127.0.0.1:5173',
-        'https://crm-management-system-production.up.railway.app',
-        'https://*.vercel.app',  // Frontend Vercel URL ke liye
-        'https://*.netlify.app', // Frontend Netlify URL ke liye
+        'https://majestic-sunshine-60f9a6.netlify.app',
+        'https://*.netlify.app',
     ],
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
