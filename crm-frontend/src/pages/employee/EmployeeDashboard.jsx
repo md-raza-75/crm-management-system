@@ -21,22 +21,25 @@ export default function EmployeeDashboard() {
     const [loading, setLoading] = useState(true);
     const [clockLoading, setClockLoading] = useState(false);
     const [todayAtt, setTodayAtt] = useState(null);
+    const [hasPendingFeedback, setHasPendingFeedback] = useState(false);
 
     const fetchAll = async () => {
         setLoading(true);
         try {
-            const [statsRes, attRes, leavesRes, tasksRes, todayRes] = await Promise.all([
+            const [statsRes, attRes, leavesRes, tasksRes, todayRes, feedbackStatusRes] = await Promise.all([
                 api.get('/employee/dashboard'),
                 api.get('/employee/attendance', { params: { per_page: 5 } }),
                 api.get('/employee/leaves', { params: { status: 'pending', per_page: 3 } }),
                 api.get('/employee/tasks', { params: { per_page: 5 } }),
                 api.get('/employee/attendance/today'),
+                api.get('/employee/feedback/status'),
             ]);
             setStats(statsRes.data.data);
             setRecentAttendance(attRes.data.data);
             setPendingLeaves(leavesRes.data.data);
             setMyTasks(tasksRes.data.data);
             setTodayAtt(todayRes.data.data);
+            setHasPendingFeedback(feedbackStatusRes.data.has_pending_request);
         } catch (e) {
             console.error(e);
         } finally {
@@ -113,6 +116,24 @@ export default function EmployeeDashboard() {
                     </div>
                 </div>
             </div>
+
+            {/* Feedback Survey Request Notification */}
+            {hasPendingFeedback && (
+                <div className="bg-indigo-50 dark:bg-indigo-900/10 border border-indigo-200 dark:border-indigo-900/30 rounded-xl p-5 shadow-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                            <span className="text-2xl">📝</span>
+                            <div>
+                                <h3 className="text-sm font-bold text-indigo-900 dark:text-indigo-400">Feedback Survey Request</h3>
+                                <p className="text-xs text-indigo-700 dark:text-indigo-300 mt-1">You have a pending feedback request. Please fill out the survey form.</p>
+                            </div>
+                        </div>
+                        <Link to="/employee/feedback" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow transition-colors shrink-0 text-center">
+                            Start Survey
+                        </Link>
+                    </div>
+                </div>
+            )}
 
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">

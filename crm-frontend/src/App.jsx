@@ -32,6 +32,8 @@ import MyProfile from './pages/employee/MyProfile';
 import MyAttendance from './pages/employee/MyAttendance';
 import MyLeaves from './pages/employee/MyLeaves';
 import MyTasks from './pages/employee/MyTasks';
+import FeedbackForm from './pages/employee/FeedbackForm';
+import FeedbackList from './pages/hr/FeedbackList';
 
 import { ToastProvider } from './context/ToastContext';
 
@@ -163,6 +165,16 @@ function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
+            <Route
+                path="/hr/feedback"
+                element={
+                    <ProtectedRoute allowedRoles={['hr_manager', 'super_admin']}>
+                        <DashboardLayout>
+                            <FeedbackList />
+                        </DashboardLayout>
+                    </ProtectedRoute>
+                }
+            />
 
             {/* Employee Module Protected Routes */}
             <Route
@@ -201,6 +213,16 @@ function AppRoutes() {
                     <ProtectedRoute allowedRoles={['employee']}>
                         <DashboardLayout>
                             <MyTasks />
+                        </DashboardLayout>
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/employee/feedback"
+                element={
+                    <ProtectedRoute allowedRoles={['employee']}>
+                        <DashboardLayout>
+                            <FeedbackForm />
                         </DashboardLayout>
                     </ProtectedRoute>
                 }

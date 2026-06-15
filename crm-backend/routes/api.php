@@ -21,6 +21,7 @@ use App\Http\Controllers\Employee\TaskController as EmployeeTaskController;
 
 use App\Models\Department;
 use App\Models\LeaveType;
+use App\Http\Controllers\FeedbackController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,6 +68,9 @@ Route::middleware('auth:sanctum')->group(function () {
         
         Route::apiResource('reports', ReportController::class)->only(['index', 'store', 'show', 'destroy']);
         Route::get('reports/{id}/download', [ReportController::class, 'download']);
+        Route::get('feedback', [FeedbackController::class, 'adminIndex']);
+        Route::get('feedback/employees', [FeedbackController::class, 'employeeStatuses']);
+        Route::post('feedback/send/{employee_id}', [FeedbackController::class, 'sendRequest']);
     });
 
     // HR Manager Routes (also accessible by Super Admin)
@@ -83,6 +87,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('leaves/{id}/review', [HrLeaveController::class, 'review']);
         
         Route::apiResource('tasks', HrTaskController::class);
+        Route::get('feedback', [FeedbackController::class, 'hrIndex']);
+        Route::get('feedback/employees', [FeedbackController::class, 'employeeStatuses']);
+        Route::post('feedback/send/{employee_id}', [FeedbackController::class, 'sendRequest']);
     });
 
     // Employee Routes
@@ -105,6 +112,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('tasks', [EmployeeTaskController::class, 'index']);
         Route::get('tasks/{id}', [EmployeeTaskController::class, 'show']);
         Route::put('tasks/{id}/status', [EmployeeTaskController::class, 'updateStatus']);
+        Route::post('feedback/submit', [FeedbackController::class, 'submit']);
+        Route::get('feedback/status', [FeedbackController::class, 'status']);
     });
 
 });
